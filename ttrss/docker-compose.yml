@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  tinyrss:
+    image: clue/ttrss
+    restart: unless-stopped
+    environment:
+      - DB_TYPE=mysql
+      - DB_HOST=${MARIADB_HOST}
+      - DB_PORT=${MARIADB_PORT}
+      - DB_NAME=${MARIADB_USER}
+      - DB_USER=${MARIADB_USER}
+      - DB_PASS=${MARIADB_PASSWORD}
+      - SELF_URL_PATH=${SELF_URL_PATH}
+      - VIRTUAL_HOST
+      - LETSENCRYPT_HOST=${VIRTUAL_HOST}
+    ports:
+      - "18080:80"
+    networks:
+      - nginx_proxy
+    
+networks:
+  nginx_proxy:
+    external:
+      name: nginx_proxy

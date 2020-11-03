@@ -1,0 +1,22 @@
+version: "3"
+services:
+  youtube-dl-webui:
+    image: d0u9/youtube-dl-webui
+    environment:
+      - VIRTUAL_HOST
+      - LETSENCRYPT_HOST=${VIRTUAL_HOST}
+    networks:
+      - nginx_proxy
+    ports:
+      - "5000"
+    volumes:
+      - /share/Qmultimedia/youtube-dl:/tmp
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+networks:
+  nginx_proxy:
+    external:
+      name: nginx_proxy
