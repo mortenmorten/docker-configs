@@ -1,0 +1,50 @@
+version: '3.3'
+
+services:
+  traefik:
+    image: traefik:v2.5
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+      - 8888:8080
+    networks:
+      - web
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /share/Container/traefik/etc/traefik:/etc/traefik/
+      - /share/Container/traefik/letsencrypt:/letsencrypt
+    environment:
+      - DUCKDNS_TOKEN
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+
+  whoami:
+    image: "containous/whoami"
+    container_name: "simple-service"
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.mortenmorten.duckdns.org`)"
+      - "traefik.http.routers.whoami.entrypoints=websecure"
+      - "traefik.http.routers.whoami.tls.certresolver=default"
+
+  duckdns:
+    image: linuxserver/duckdns
+    environment:
+      - TZ=Europe/Oslo
+      - SUBDOMAINS
+      - TOKEN=${DUCKDNS_TOKEN}
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+networks:
+  web:
+    external:
+      name: web
