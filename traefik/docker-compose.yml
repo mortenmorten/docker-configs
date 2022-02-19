@@ -63,5 +63,3 @@ configs:
 
 volumes:
   letsencrypt:
-    external:
-      name: letsencrypt
