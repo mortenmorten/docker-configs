@@ -12,8 +12,12 @@ services:
       - web
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - traefik_etc:/etc/traefik/
       - letsencrypt:/letsencrypt
+    configs:
+      - source: traefik.yml
+        target: /etc/traefik/traefik.yml
+      - source: traefik-dynamic.yml
+        target: /etc/traefik-dynamic/traefik.yml
     environment:
       - DUCKDNS_TOKEN
     deploy:
@@ -49,10 +53,15 @@ networks:
     external:
       name: web
 
-volumes:
-  traefik_etc:
+configs:
+  traefik.yml:
     external:
-      name: traefik_etc
+      name: traefik.yml
+  traefik-dynamic.yml:
+    external:
+      name: traefik-dynamic.yml
+
+volumes:
   letsencrypt:
     external:
       name: letsencrypt
