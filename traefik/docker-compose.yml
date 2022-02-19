@@ -17,7 +17,7 @@ services:
       - source: traefik.yml
         target: /etc/traefik/traefik.yml
       - source: traefik-dynamic.yml
-        target: /etc/traefik-dynamic/traefik.yml
+        target: /etc/traefik/traefik-dynamic.yml
     environment:
       - DUCKDNS_TOKEN
     deploy:
