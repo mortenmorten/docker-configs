@@ -12,8 +12,8 @@ services:
       - web
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /share/Container/traefik/etc/traefik:/etc/traefik/
-      - /share/Container/traefik/letsencrypt:/letsencrypt
+      - traefik_etc:/etc/traefik/
+      - letsencrypt:/letsencrypt
     environment:
       - DUCKDNS_TOKEN
     deploy:
@@ -29,7 +29,7 @@ services:
       - web
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(`whoami.mortenmorten.duckdns.org`)"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.${SUBDOMAINS}.duckdns.org`)"
       - "traefik.http.routers.whoami.entrypoints=websecure"
       - "traefik.http.routers.whoami.tls.certresolver=default"
 
@@ -48,3 +48,11 @@ networks:
   web:
     external:
       name: web
+
+volumes:
+  traefik_etc:
+    external:
+      name: traefik_etc
+  letsencrypt:
+    external:
+      name: letsencrypt
