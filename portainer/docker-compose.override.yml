@@ -1,0 +1,6 @@
+version: '3.2'
+
+services:
+  portainer:
+    labels:
+      - traefik.http.routers.portainer.rule=Host(`portainer.${SUBDOMAINS}.duckdns.org`)
